@@ -4,13 +4,7 @@ require 'net/https'
 module SslScanner
 
   def self.scan_domain(domain)
-    uri = URI.parse(domain)
-    http = Net::HTTP.new(uri.host,uri.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http.start do |h|
-      @cert = h.peer_cert
-    end
+    perform_request(domain)
 
     @info = {
       subject:      @cert.subject,
@@ -24,5 +18,17 @@ module SslScanner
     @info
   rescue => ex
     { error: ex.to_s }
+  end
+
+  private
+
+  def self.perform_request(domain)
+    uri = URI.parse(domain)
+    http = Net::HTTP.new(uri.host,uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    http.start do |h|
+      @cert = h.peer_cert
+    end
   end
 end
