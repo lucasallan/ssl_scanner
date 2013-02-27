@@ -6,6 +6,8 @@ module SslScanner
   def self.scan_domain(domain)
     perform_request(domain)
 
+    raise 'no ssl information found' if @cert.nil?
+
     @info = {
       subject:      @cert.subject,
       issuer:       @cert.issuer,
