@@ -8,4 +8,8 @@ describe SslScanner do
       info.should have_key(k)
     end
   end
+
+  it 'returns an error if domain does not have ssl' do
+    SslScanner.scan_domain('http://www.lucasallan.com').should == {error: 'no ssl information found'}
+  end
 end
